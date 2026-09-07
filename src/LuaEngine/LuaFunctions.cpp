@@ -761,6 +761,8 @@ ALERegister<Player> PlayerMethods[] =
     { "ResurrectPlayer", &LuaPlayer::ResurrectPlayer },
     { "RepopAtGraveyard", &LuaPlayer::RepopAtGraveyard },
     { "EquipItem", &LuaPlayer::EquipItem },
+    { "SetWeaponDamageUpgrade", &LuaPlayer::SetWeaponDamageUpgrade },
+    { "SetItemStatUpgrade", &LuaPlayer::SetItemStatUpgrade },
     { "ResetSpellCooldown", &LuaPlayer::ResetSpellCooldown },
     { "ResetTypeCooldowns", &LuaPlayer::ResetTypeCooldowns },
     { "ResetAllCooldowns", &LuaPlayer::ResetAllCooldowns },
