@@ -3155,6 +3155,37 @@ namespace LuaPlayer
         ALE::Push(L, static_cast<uint32>(result));
         return 1;
     }
+
+    int SetItemStatUpgrade(lua_State* L, Player* player)
+    {
+        if (!player)
+        {
+            ALE::Push(L, static_cast<uint32>(
+                ItemUpgrade::StatUpgradeResult::InvalidPlayer));
+            return 1;
+        }
+    
+        Item* item = ALE::CHECKOBJ<Item>(L, 2, false);
+        uint32 statType = ALE::CHECKVAL<uint32>(L, 3);
+        uint16 rank = ALE::CHECKVAL<uint16>(L, 4);
+    
+        if (!item)
+        {
+            ALE::Push(L, static_cast<uint32>(
+                ItemUpgrade::StatUpgradeResult::InvalidItem));
+            return 1;
+        }
+    
+        ItemUpgrade::StatUpgradeResult result =
+            ItemUpgrade::instance()->SetItemStatUpgrade(
+                player,
+                item,
+                statType,
+                rank);
+    
+        ALE::Push(L, static_cast<uint32>(result));
+        return 1;
+    }
     
     /**
      * Returns true if the player can equip the given [Item] or item entry to the given slot, false otherwise.
