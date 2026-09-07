@@ -10,6 +10,7 @@
 #include "Chat.h"
 #include "GameTime.h"
 #include "GossipDef.h"
+#include "item_upgrade.h"
 
 /***
  * Inherits all methods from: [Object], [WorldObject], [Unit]
@@ -3123,6 +3124,35 @@ namespace LuaPlayer
 
         ALE::Push(L, player->EquipItem(dest, item, true));
         player->AutoUnequipOffhandIfNeed();
+        return 1;
+    }
+
+    int SetWeaponDamageUpgrade(lua_State* L, Player* player)
+    {
+        if (!player)
+        {
+            ALE::Push(L, static_cast<uint32>(
+                ItemUpgrade::WeaponUpgradeResult::InvalidPlayer));
+            return 1;
+        }
+
+        Item* item = ALE::CHECKOBJ<Item>(L, 2, false);
+        uint16 rank = ALE::CHECKVAL<uint16>(L, 3);
+
+        if (!item)
+        {
+            ALE::Push(L, static_cast<uint32>(
+                ItemUpgrade::WeaponUpgradeResult::InvalidItem));
+            return 1;
+        }
+
+        ItemUpgrade::WeaponUpgradeResult result =
+            ItemUpgrade::instance()->SetWeaponDamageUpgrade(
+                player,
+                item,
+                rank);
+
+        ALE::Push(L, static_cast<uint32>(result));
         return 1;
     }
     
