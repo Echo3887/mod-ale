@@ -763,6 +763,7 @@ ALERegister<Player> PlayerMethods[] =
     { "EquipItem", &LuaPlayer::EquipItem },
     { "SetWeaponDamageUpgrade", &LuaPlayer::SetWeaponDamageUpgrade },
     { "SetItemStatUpgrade", &LuaPlayer::SetItemStatUpgrade },
+	{ "SetKeeperWeaponProgression", &LuaPlayer::SetKeeperWeaponProgression },
     { "ResetSpellCooldown", &LuaPlayer::ResetSpellCooldown },
     { "ResetTypeCooldowns", &LuaPlayer::ResetTypeCooldowns },
     { "ResetAllCooldowns", &LuaPlayer::ResetAllCooldowns },

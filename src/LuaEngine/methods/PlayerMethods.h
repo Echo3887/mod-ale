@@ -3182,6 +3182,91 @@ namespace LuaPlayer
         ALE::Push(L, static_cast<uint32>(result));
         return 1;
     }
+	
+	int SetKeeperWeaponProgression(lua_State* L, Player* player)
+{
+    if (!player)
+    {
+        ALE::Push(L, static_cast<uint32>(
+            ItemUpgrade::KeeperProgressionResult::InvalidPlayer));
+        return 1;
+    }
+
+    Item* item = ALE::CHECKOBJ<Item>(L, 2, false);
+    uint32 bossEntry = ALE::CHECKVAL<uint32>(L, 3);
+    uint16 rank = ALE::CHECKVAL<uint16>(L, 4);
+
+    if (!item)
+    {
+        ALE::Push(L, static_cast<uint32>(
+            ItemUpgrade::KeeperProgressionResult::InvalidItem));
+        return 1;
+    }
+
+    std::vector<uint32> statTypes;
+
+    /*
+     * Lua:
+     *
+     * player:SetKeeperWeaponProgression(
+     *     item,
+     *     bossEntry,
+     *     rank,
+     *     { 5, 7 },
+     *     true
+     * )
+     *
+     * Argument 5 ist die Stat-Tabelle.
+     * Argument 6 ist weaponDamage.
+     */
+
+    if (!lua_isnil(L, 5))
+    {
+        if (!lua_istable(L, 5))
+        {
+            ALE::Push(L, static_cast<uint32>(
+                ItemUpgrade::KeeperProgressionResult::InvalidStat));
+            return 1;
+        }
+
+        lua_Integer count = lua_rawlen(L, 5);
+
+        for (lua_Integer i = 1; i <= count; ++i)
+        {
+            lua_rawgeti(L, 5, i);
+
+            if (!lua_isnumber(L, -1))
+            {
+                lua_pop(L, 1);
+
+                ALE::Push(L, static_cast<uint32>(
+                    ItemUpgrade::KeeperProgressionResult::InvalidStat));
+                return 1;
+            }
+
+            uint32 statType =
+                static_cast<uint32>(lua_tointeger(L, -1));
+
+            lua_pop(L, 1);
+
+            statTypes.push_back(statType);
+        }
+    }
+
+    bool weaponDamage = ALE::CHECKVAL<bool>(L, 6, false);
+
+    ItemUpgrade::KeeperProgressionResult result =
+        ItemUpgrade::instance()->SetKeeperWeaponProgression(
+            player,
+            item,
+            bossEntry,
+            rank,
+            statTypes,
+            weaponDamage);
+
+    ALE::Push(L, static_cast<uint32>(result));
+    return 1;
+}
     
     /**
      * Returns true if the player can equip the given [Item] or item entry to the given slot, false otherwise.
